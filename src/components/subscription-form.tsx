@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,8 +8,16 @@ import { Select } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { CATEGORIES, CATEGORY_MAP, CYCLES } from '@/lib/constants';
 import { formatCurrency, toISODate } from '@/lib/utils';
-import { searchCatalog, type CatalogService } from '@/lib/service-catalog';
-import type { Category, Cycle, Subscription } from '@/types';
+import {
+  findCatalogMatch,
+  searchCatalog,
+  type CatalogService,
+} from '@/lib/service-catalog';
+import {
+  BILLING_SOURCES,
+  getCancellationTarget,
+} from '@/lib/cancellation';
+import type { BillingSource, Category, Cycle, Subscription } from '@/types';
 
 interface Props {
   initial?: Subscription;
@@ -38,6 +46,9 @@ export function SubscriptionForm({ initial, onSaved, onDeleted, onCancel }: Prop
   const [sharedCount, setSharedCount] = useState<number>(
     initial?.shared_count ?? 1,
   );
+  const [billingSource, setBillingSource] = useState<BillingSource>(
+    initial?.billing_source ?? 'web',
+  );
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -59,12 +70,30 @@ export function SubscriptionForm({ initial, onSaved, onDeleted, onCancel }: Prop
     setCycle(s.suggestedCycle);
     setCategory(s.category);
     if (s.cancelUrl) setCancelUrl(s.cancelUrl);
+    setBillingSource(s.billingSource ?? 'web');
     setShowSuggestions(false);
   }
 
   const numPrice = Number(String(price).replace(',', '.'));
   const effectivePrice =
     numPrice && sharedCount > 1 ? numPrice / sharedCount : numPrice;
+
+  // Sugestão de cancelamento baseada no nome (catálogo).
+  const cancelSuggestion = useMemo(() => {
+    const m = findCatalogMatch(name);
+    if (!m) return null;
+    const wouldSetUrl = !!m.cancelUrl && !cancelUrl;
+    const wouldSetSource = !!m.billingSource && m.billingSource !== billingSource;
+    if (!wouldSetUrl && !wouldSetSource) return null;
+    return { match: m, wouldSetUrl, wouldSetSource };
+  }, [name, cancelUrl, billingSource]);
+
+  function applyCancelSuggestion() {
+    if (!cancelSuggestion) return;
+    const m = cancelSuggestion.match;
+    if (m.cancelUrl) setCancelUrl(m.cancelUrl);
+    if (m.billingSource) setBillingSource(m.billingSource);
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -86,6 +115,7 @@ export function SubscriptionForm({ initial, onSaved, onDeleted, onCancel }: Prop
         cancel_url: cancelUrl || null,
         is_active: isActive,
         shared_count: sharedCount,
+        billing_source: billingSource,
       };
 
       const url = isEdit
@@ -260,15 +290,66 @@ export function SubscriptionForm({ initial, onSaved, onDeleted, onCancel }: Prop
       </div>
 
       <div>
-        <Label htmlFor="cancel_url">URL de cancelamento (opcional)</Label>
-        <Input
-          id="cancel_url"
-          type="url"
-          value={cancelUrl ?? ''}
-          onChange={(e) => setCancelUrl(e.target.value)}
-          placeholder="https://..."
-        />
+        <Label htmlFor="billing_source">Onde é cobrada?</Label>
+        <Select
+          id="billing_source"
+          value={billingSource}
+          onChange={(e) => setBillingSource(e.target.value as BillingSource)}
+        >
+          {BILLING_SOURCES.map((s) => (
+            <option key={s.value} value={s.value}>
+              {s.emoji ? `${s.emoji} ` : ''}
+              {s.label}
+            </option>
+          ))}
+        </Select>
+        <p className="mt-1 text-xs text-text-secondary">
+          Define pra onde te levamos na hora de cancelar.
+        </p>
       </div>
+
+      {(billingSource === 'web' || billingSource === 'other') && (
+        <div>
+          <Label htmlFor="cancel_url">URL de cancelamento (opcional)</Label>
+          <Input
+            id="cancel_url"
+            type="url"
+            value={cancelUrl ?? ''}
+            onChange={(e) => setCancelUrl(e.target.value)}
+            placeholder="https://..."
+          />
+        </div>
+      )}
+
+      {cancelSuggestion && (
+        <div className="rounded-input border border-accent/30 bg-accent/10 p-3">
+          <p className="mb-2 text-xs text-text-secondary">
+            Reconhecemos{' '}
+            <strong className="text-text-primary">
+              {cancelSuggestion.match.name}
+            </strong>
+            . Quer usar o cancelamento conhecido
+            {cancelSuggestion.wouldSetSource && cancelSuggestion.match.billingSource !== 'web'
+              ? ' (via loja)'
+              : ''}
+            ?
+          </p>
+          <Button
+            type="button"
+            size="sm"
+            variant="secondary"
+            onClick={applyCancelSuggestion}
+          >
+            Usar cancelamento de {cancelSuggestion.match.name}
+          </Button>
+        </div>
+      )}
+
+      <CancelAction
+        billingSource={billingSource}
+        cancelUrl={cancelUrl ?? ''}
+        name={name || 'esta assinatura'}
+      />
 
       <div>
         <Label htmlFor="notes">Notas (opcional)</Label>
@@ -347,5 +428,44 @@ export function SubscriptionForm({ initial, onSaved, onDeleted, onCancel }: Prop
         </div>
       </div>
     </form>
+  );
+}
+
+function CancelAction({
+  billingSource,
+  cancelUrl,
+  name,
+}: {
+  billingSource: BillingSource;
+  cancelUrl: string;
+  name: string;
+}) {
+  const target = getCancellationTarget({
+    billing_source: billingSource,
+    cancel_url: cancelUrl || null,
+    name,
+  });
+
+  return (
+    <div className="rounded-input border border-border bg-bg-input p-3">
+      <p className="mb-1 text-sm font-medium text-text-primary">
+        Cancelar assinatura
+      </p>
+      <p className="mb-3 text-xs text-text-secondary">{target.hint}</p>
+      {target.url ? (
+        <a
+          href={target.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex h-9 items-center justify-center gap-2 rounded-input bg-bg-card px-3 text-sm font-medium text-text-primary border border-border transition-colors hover:bg-[#1d1d35]"
+        >
+          {target.label} ↗
+        </a>
+      ) : (
+        <span className="text-xs text-text-secondary italic">
+          {target.label}
+        </span>
+      )}
+    </div>
   );
 }

@@ -12,6 +12,7 @@ interface AlertEmailInput {
   category: Category;
   cycle: Cycle;
   cancelUrl: string | null;
+  cancelLabel?: string;
   appUrl: string;
 }
 
@@ -74,7 +75,7 @@ export function buildAlertEmailHtml(input: AlertEmailInput): string {
             <a href="${input.appUrl}/dashboard" style="display:inline-block;background:#6C5CE7;color:#fff;text-decoration:none;font-weight:500;padding:12px 20px;border-radius:8px;font-size:14px;">Ver todas as assinaturas</a>
             ${
               input.cancelUrl
-                ? `<a href="${escapeHtml(input.cancelUrl)}" style="display:inline-block;color:#8888a0;text-decoration:underline;padding:12px 16px;font-size:14px;">Gerenciar assinatura</a>`
+                ? `<a href="${escapeHtml(input.cancelUrl)}" style="display:inline-block;color:#8888a0;text-decoration:underline;padding:12px 16px;font-size:14px;">${escapeHtml(input.cancelLabel || 'Gerenciar assinatura')}</a>`
                 : ''
             }
           </div>

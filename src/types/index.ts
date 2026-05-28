@@ -21,6 +21,7 @@ export type Category =
 export type Plan = 'free' | 'premium';
 export type Locale = 'pt-BR' | 'en';
 export type Theme = 'dark' | 'light' | 'system';
+export type BillingSource = 'web' | 'apple' | 'google' | 'other';
 
 export interface Profile {
   id: string;
@@ -54,6 +55,7 @@ export interface Subscription {
   logo_url: string | null;
   cancel_url: string | null;
   shared_count: number;
+  billing_source: BillingSource;
   created_at: string;
   updated_at: string;
 }

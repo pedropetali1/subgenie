@@ -46,6 +46,10 @@ export const subscriptionSchema = z.object({
     .max(20, 'Máximo 20 pessoas')
     .optional()
     .default(1),
+  billing_source: z
+    .enum(['web', 'apple', 'google', 'other'])
+    .optional()
+    .default('web'),
 });
 
 export type SubscriptionInput = z.infer<typeof subscriptionSchema>;

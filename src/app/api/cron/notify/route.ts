@@ -3,6 +3,7 @@ import { createAdminClient } from '@/lib/supabase/server';
 import { FROM_EMAIL, getResend } from '@/lib/resend';
 import { buildAlertEmailHtml, buildAlertEmailSubject } from '@/lib/email-templates';
 import { sendPush } from '@/lib/web-push';
+import { getCancellationTarget } from '@/lib/cancellation';
 import { calculateNextBilling, daysUntil, formatCurrency, toISODate } from '@/lib/utils';
 import type { Profile, Subscription } from '@/types';
 
@@ -102,6 +103,7 @@ export async function GET(request: NextRequest) {
               currency: sub.currency,
               daysUntil: days,
             });
+            const cancelTarget = getCancellationTarget(sub);
             const html = buildAlertEmailHtml({
               userName: profile.name,
               serviceName: sub.name,
@@ -111,7 +113,8 @@ export async function GET(request: NextRequest) {
               daysUntil: days,
               category: sub.category,
               cycle: sub.cycle,
-              cancelUrl: sub.cancel_url,
+              cancelUrl: cancelTarget.url,
+              cancelLabel: cancelTarget.label,
               appUrl,
             });
 

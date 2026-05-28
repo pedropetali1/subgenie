@@ -83,6 +83,7 @@ export async function POST(request: NextRequest) {
       cancel_url: input.cancel_url || null,
       is_active: input.is_active ?? true,
       shared_count: input.shared_count ?? 1,
+      billing_source: input.billing_source ?? 'web',
     })
     .select('*')
     .single();
