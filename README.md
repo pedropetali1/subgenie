@@ -31,6 +31,7 @@ Implementado:
 - Insights Premium: gráfico de evolução nos últimos 6 meses, delta mês a mês, sugestões automáticas
 - Exportar assinaturas em CSV
 - Página `/settings` com perfil, preferências de notificação, gerenciamento de plano e exclusão de conta
+- **Cancelamento dinâmico**: cada assinatura tem uma origem de cobrança (`web`, `apple`, `google`, `other`) e o app mostra o atalho/instrução certo pra cancelar — App Store, Google Play ou URL oficial do serviço. A dica também acompanha os alertas do cron.
 
 ## Setup local
 
@@ -105,11 +106,41 @@ Abra `http://localhost:3000`.
 
 ## Deploy na Vercel
 
-1. Faça push pro GitHub.
-2. Importe o projeto no [vercel.com/new](https://vercel.com/new).
-3. Configure todas as variáveis de ambiente em `Project Settings → Environment Variables`.
-4. O `vercel.json` já registra o cron em `/api/cron/notify` rodando diariamente às 11h UTC (≈ 08h BRT).
-5. Atualize `NEXT_PUBLIC_APP_URL` pro domínio de produção e adicione o callback nos providers OAuth.
+O build de produção (`npm run build`) já passa limpo — o que falta é só configuração de produção. Siga o checklist:
+
+### 1. Conectar o repositório
+
+1. Faça push pro GitHub (o remote `origin` já aponta pra `pedropetali1/subgenie`).
+2. Importe o projeto no [vercel.com/new](https://vercel.com/new). O Vercel detecta Next.js automaticamente (não precisa mexer em build command nem output).
+
+### 2. Variáveis de ambiente (Project Settings → Environment Variables)
+
+O `.env.local` **não** vai pro deploy — cadastre **todas** as variáveis abaixo no painel, com **valores de produção**:
+
+| Variável | Atenção |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` | projeto Supabase de produção |
+| `STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | trocar `sk_test`/`pk_test` pelas chaves **live** |
+| `STRIPE_WEBHOOK_SECRET` | gerado **depois** de criar o webhook em produção (passo 4) |
+| `STRIPE_PRICE_ID` | `price_...` do produto **live** |
+| `RESEND_API_KEY`, `RESEND_FROM_EMAIL` | domínio precisa estar verificado no Resend |
+| `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | mesmas chaves do dev servem |
+| `NEXT_PUBLIC_APP_URL` | **URL real** de produção (ex: `https://subsly.com.br`), nunca `localhost` |
+| `CRON_SECRET` | string longa aleatória — sem ela o cron retorna **401** |
+
+### 3. Supabase de produção
+
+1. Rode **todas** as migrations (`001`, `002`, `003`) no SQL Editor do projeto de produção.
+2. Em `Authentication → URL Configuration`, troque a Site URL e as Redirect URLs pra URL de produção (senão o login OAuth e o `/callback` quebram).
+3. No Google Cloud Console, adicione o redirect URI de produção do Supabase nas credenciais OAuth.
+
+### 4. Webhook do Stripe em produção
+
+Em [Webhooks](https://dashboard.stripe.com/webhooks) (live mode) crie um endpoint apontando pra `https://<seu-dominio>/api/webhooks/stripe` com os eventos `checkout.session.completed`, `customer.subscription.deleted`, `invoice.payment_failed`. Copie o signing secret gerado pra `STRIPE_WEBHOOK_SECRET` no Vercel.
+
+### 5. Cron
+
+O `vercel.json` já registra o cron em `/api/cron/notify` rodando diariamente às 11h UTC (≈ 08h BRT). O plano **Hobby** permite cron diário — o horário é aproximado. Pra frequências menores que 1×/dia, precisa do plano Pro.
 
 ### Testar o cron localmente
 
@@ -147,9 +178,18 @@ src/
 │   ├── utils.ts             # cálculos de data, formatação
 │   ├── validations.ts       # zod
 │   ├── resend.ts
-│   └── email-templates.ts
+│   ├── email-templates.ts
+│   ├── cancellation.ts      # origem de cobrança + atalhos de cancelamento
+│   ├── service-catalog.ts   # ~40 serviços br pra autocomplete
+│   ├── stripe.ts            # billing
+│   ├── web-push.ts          # envio de push
+│   └── theme.ts / plan.ts / csv.ts
+├── i18n/messages.ts         # dicionário pt-BR / en
 └── types/index.ts
-supabase/migrations/001_initial.sql
+supabase/migrations/
+├── 001_initial.sql
+├── 002_phase3.sql           # PWA, push, i18n, tema, compartilhamento
+└── 003_billing_source.sql   # origem de cobrança (cancelamento)
 ```
 
 ## Fase 3 — Diferenciação
