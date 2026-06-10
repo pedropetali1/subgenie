@@ -39,7 +39,7 @@ export function DashboardShell({ profile, children }: DashboardShellProps) {
           <div className="flex h-7 w-7 items-center justify-center rounded-input bg-accent text-sm font-bold text-white">
             S
           </div>
-          <span className="font-bold text-text-primary">Subsly</span>
+          <span className="font-bold text-text-primary">SubGenie</span>
         </Link>
         <button
           aria-label="Menu"
@@ -65,7 +65,7 @@ export function DashboardShell({ profile, children }: DashboardShellProps) {
             <div className="flex h-8 w-8 items-center justify-center rounded-input bg-accent text-white font-bold">
               S
             </div>
-            <span className="text-lg font-bold text-text-primary">Subsly</span>
+            <span className="text-lg font-bold text-text-primary">SubGenie</span>
           </Link>
 
           <nav className="space-y-1">

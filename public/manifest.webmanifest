@@ -1,6 +1,6 @@
 {
-  "name": "Subsly — Gestor de assinaturas",
-  "short_name": "Subsly",
+  "name": "SubGenie — Gestor de assinaturas",
+  "short_name": "SubGenie",
   "description": "Centralize suas assinaturas, receba alertas e veja pra onde vai seu dinheiro.",
   "start_url": "/dashboard",
   "scope": "/",

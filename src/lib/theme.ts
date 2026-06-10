@@ -1,6 +1,6 @@
 import type { Theme } from '@/types';
 
-export const THEME_KEY = 'subsly:theme';
+export const THEME_KEY = 'subgenie:theme';
 
 export function resolveTheme(t: Theme): 'dark' | 'light' {
   if (t === 'system') {

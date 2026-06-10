@@ -21,8 +21,8 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
   title: {
-    default: 'Subsly — Pare de pagar por assinaturas que você não usa',
-    template: '%s | Subsly',
+    default: 'SubGenie — Pare de pagar por assinaturas que você não usa',
+    template: '%s | SubGenie',
   },
   description:
     'Centralize suas assinaturas, receba alertas antes da cobrança e descubra pra onde vai seu dinheiro todo mês.',
@@ -38,15 +38,15 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'pt_BR',
     url: APP_URL,
-    siteName: 'Subsly',
-    title: 'Subsly — Gestor pessoal de assinaturas',
+    siteName: 'SubGenie',
+    title: 'SubGenie — Gestor pessoal de assinaturas',
     description:
       'Descubra pra onde vai seu dinheiro todo mês e pare de pagar por coisas que você nem usa.',
     images: [{ url: '/og-image.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Subsly — Gestor pessoal de assinaturas',
+    title: 'SubGenie — Gestor pessoal de assinaturas',
     description:
       'Centralize suas assinaturas e receba alertas antes da cobrança.',
     images: ['/og-image.png'],
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
   manifest: '/manifest.webmanifest',
   appleWebApp: {
     capable: true,
-    title: 'Subsly',
+    title: 'SubGenie',
     statusBarStyle: 'black-translucent',
   },
   icons: {

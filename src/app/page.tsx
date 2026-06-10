@@ -39,7 +39,7 @@ export default function LandingPage() {
             <div className="flex h-8 w-8 items-center justify-center rounded-input bg-accent text-white font-bold">
               S
             </div>
-            <span className="text-lg font-bold text-text-primary">Subsly</span>
+            <span className="text-lg font-bold text-text-primary">SubGenie</span>
           </Link>
           <nav className="flex items-center gap-4">
             <a
@@ -140,13 +140,13 @@ export default function LandingPage() {
             <div className="flex h-6 w-6 items-center justify-center rounded bg-accent text-xs font-bold text-white">
               S
             </div>
-            <span>© {new Date().getFullYear()} Subsly</span>
+            <span>© {new Date().getFullYear()} SubGenie</span>
           </div>
           <div className="flex gap-4">
             <a href="#precos" className="hover:text-text-primary">
               Preços
             </a>
-            <a href="mailto:contato@subsly.com.br" className="hover:text-text-primary">
+            <a href="mailto:contato@subgenie.com.br" className="hover:text-text-primary">
               Contato
             </a>
           </div>

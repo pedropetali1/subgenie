@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
               await resend.emails.send({
                 from: FROM_EMAIL,
                 to: profile.email,
-                subject: '⚠️ Falha no pagamento do Subsly Premium',
+                subject: '⚠️ Falha no pagamento do SubGenie Premium',
                 html: paymentFailedEmail({
                   name: profile.name,
                   appUrl: process.env.NEXT_PUBLIC_APP_URL || '',
@@ -122,7 +122,7 @@ function paymentFailedEmail(input: { name: string | null; appUrl: string }) {
 <tr><td style="padding:28px;">
 <p style="color:#8888a0;font-size:14px;margin:0 0 8px;">${greeting}</p>
 <h1 style="color:#e0e0e8;font-size:22px;margin:0 0 16px;">Não conseguimos cobrar seu plano Premium</h1>
-<p style="color:#e0e0e8;font-size:15px;line-height:1.5;">Houve uma falha no pagamento da sua assinatura do Subsly Premium. Atualize seu método de pagamento pra continuar com os benefícios.</p>
+<p style="color:#e0e0e8;font-size:15px;line-height:1.5;">Houve uma falha no pagamento da sua assinatura do SubGenie Premium. Atualize seu método de pagamento pra continuar com os benefícios.</p>
 <div style="margin:24px 0;">
 <a href="${input.appUrl}/settings" style="display:inline-block;background:#6C5CE7;color:#fff;text-decoration:none;font-weight:500;padding:12px 20px;border-radius:8px;font-size:14px;">Atualizar pagamento</a>
 </div>

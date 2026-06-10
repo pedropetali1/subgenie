@@ -1,5 +1,5 @@
 -- ============================================================================
--- Subsly — Migration: origem de cobrança (cancelamento dinâmico)
+-- SubGenie — Migration: origem de cobrança (cancelamento dinâmico)
 -- ============================================================================
 
 ALTER TABLE subscriptions

@@ -1,4 +1,4 @@
-# Subsly — Gestor de Assinaturas Pessoal
+# SubGenie — Gestor de Assinaturas Pessoal
 
 ## Visão Geral
 
@@ -31,7 +31,7 @@ SaaS B2C que centraliza todas as assinaturas do usuário (streaming, apps, acade
 ## Arquitetura de Pastas
 
 ```
-subsly/
+subgenie/
 ├── src/
 │   ├── app/
 │   │   ├── (auth)/
@@ -252,7 +252,7 @@ CREATE POLICY "Users can view own notifications"
   - `checkout.session.completed` → atualizar `profiles.plan = 'premium'`
   - `customer.subscription.deleted` → downgrade para `'free'`
   - `invoice.payment_failed` → enviar e-mail de aviso
-- Produto no Stripe: "Subsly Premium" — R$9,90/mês
+- Produto no Stripe: "SubGenie Premium" — R$9,90/mês
 
 #### 2.2 Limites por Plano
 
@@ -375,7 +375,7 @@ STRIPE_PRICE_ID=              # price do plano premium
 
 # Resend
 RESEND_API_KEY=
-RESEND_FROM_EMAIL=alertas@subsly.com.br
+RESEND_FROM_EMAIL=alertas@subgenie.com.br
 
 # App
 NEXT_PUBLIC_APP_URL=http://localhost:3000
@@ -466,7 +466,7 @@ Enviar via Resend com React Email ou HTML inline:
 - Card com: logo/ícone da categoria, nome do serviço, valor, data de cobrança
 - Se tiver `cancel_url`: link "Gerenciar assinatura"
 - CTA: "Ver todas as assinaturas" → link para o dashboard
-- Footer: "Você recebe este e-mail porque ativou alertas no Subsly."
+- Footer: "Você recebe este e-mail porque ativou alertas no SubGenie."
 
 ---
 

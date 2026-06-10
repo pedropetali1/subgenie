@@ -1,5 +1,5 @@
-/* Subsly Service Worker */
-const CACHE = 'subsly-v1';
+/* SubGenie Service Worker */
+const CACHE = 'subgenie-v1';
 const SHELL = ['/', '/dashboard', '/manifest.webmanifest', '/icons/icon.svg'];
 
 self.addEventListener('install', (event) => {
@@ -44,9 +44,9 @@ self.addEventListener('push', (event) => {
   try {
     payload = event.data.json();
   } catch {
-    payload = { title: 'Subsly', body: event.data.text() };
+    payload = { title: 'SubGenie', body: event.data.text() };
   }
-  const title = payload.title || 'Subsly';
+  const title = payload.title || 'SubGenie';
   const options = {
     body: payload.body || '',
     icon: '/icons/icon.svg',

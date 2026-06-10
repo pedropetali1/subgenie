@@ -12,7 +12,7 @@ import { applyTheme, THEME_KEY } from '@/lib/theme';
 import { t as translate, type MessageKey } from '@/i18n/messages';
 import type { Locale, Theme } from '@/types';
 
-const LOCALE_KEY = 'subsly:locale';
+const LOCALE_KEY = 'subgenie:locale';
 
 interface ThemeCtx {
   theme: Theme;

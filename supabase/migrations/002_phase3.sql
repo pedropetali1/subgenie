@@ -1,5 +1,5 @@
 -- ============================================================================
--- Subsly — Migration Fase 3
+-- SubGenie — Migration Fase 3
 -- ============================================================================
 
 -- 1) Compartilhamento: quantas pessoas dividem a assinatura

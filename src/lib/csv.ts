@@ -65,5 +65,5 @@ export function downloadCsv(filename: string, content: string) {
 }
 
 export function defaultCsvFilename(): string {
-  return `subsly-assinaturas-${toISODate(new Date())}.csv`;
+  return `subgenie-assinaturas-${toISODate(new Date())}.csv`;
 }

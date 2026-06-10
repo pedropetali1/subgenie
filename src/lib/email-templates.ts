@@ -36,7 +36,7 @@ export function buildAlertEmailHtml(input: AlertEmailInput): string {
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8" />
-<title>Subsly — Alerta de cobrança</title>
+<title>SubGenie — Alerta de cobrança</title>
 </head>
 <body style="margin:0;padding:0;background:#0a0a14;color:#e0e0e8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
   <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background:#0a0a14;">
@@ -44,7 +44,7 @@ export function buildAlertEmailHtml(input: AlertEmailInput): string {
       <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width:560px;background:#16162a;border:1px solid #2a2a3a;border-radius:12px;overflow:hidden;">
         <tr><td style="padding:24px 28px;border-bottom:1px solid #2a2a3a;">
           <div style="display:inline-block;background:#6C5CE7;color:#fff;font-weight:700;font-size:14px;padding:6px 10px;border-radius:8px;">S</div>
-          <span style="font-weight:700;color:#e0e0e8;font-size:16px;margin-left:8px;">Subsly</span>
+          <span style="font-weight:700;color:#e0e0e8;font-size:16px;margin-left:8px;">SubGenie</span>
         </td></tr>
         <tr><td style="padding:28px;">
           <p style="color:#8888a0;font-size:14px;margin:0 0 8px;">${escapeHtml(greeting)}</p>
@@ -81,7 +81,7 @@ export function buildAlertEmailHtml(input: AlertEmailInput): string {
           </div>
         </td></tr>
         <tr><td style="padding:20px 28px;border-top:1px solid #2a2a3a;color:#8888a0;font-size:12px;text-align:center;">
-          Você recebe este e-mail porque ativou alertas no Subsly.
+          Você recebe este e-mail porque ativou alertas no SubGenie.
         </td></tr>
       </table>
     </td></tr>

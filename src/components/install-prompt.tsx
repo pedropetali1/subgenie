@@ -8,7 +8,7 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
-const DISMISSED_KEY = 'subsly:install-dismissed';
+const DISMISSED_KEY = 'subgenie:install-dismissed';
 
 export function InstallPrompt() {
   const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(null);
@@ -57,7 +57,7 @@ export function InstallPrompt() {
         </div>
         <div className="flex-1">
           <p className="text-sm font-semibold text-text-primary">
-            Instalar Subsly
+            Instalar SubGenie
           </p>
           <p className="text-xs text-text-secondary">
             Adicione à tela inicial pra acessar offline e receber notificações.

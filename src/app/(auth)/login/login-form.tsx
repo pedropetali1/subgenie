@@ -63,7 +63,7 @@ export function LoginForm() {
   return (
     <div className="w-full max-w-sm">
       <h1 className="mb-2 text-2xl font-bold text-text-primary">
-        Entre no Subsly
+        Entre no SubGenie
       </h1>
       <p className="mb-8 text-sm text-text-secondary">
         Use seu Google ou receba um link mágico no e-mail.

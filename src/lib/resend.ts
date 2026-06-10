@@ -14,4 +14,4 @@ export function getResend(): Resend {
 }
 
 export const FROM_EMAIL =
-  process.env.RESEND_FROM_EMAIL || 'alertas@subsly.com.br';
+  process.env.RESEND_FROM_EMAIL || 'alertas@subgenie.com.br';
